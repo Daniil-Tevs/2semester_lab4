@@ -44,14 +44,34 @@ void ADD(T_list* head,int number)
 //    }
 //    return s;
 //}
-void REPLACE(T_list* head,int number, int position)
+//void REPLACE(T_list* head,int number, int position)
+//{
+//    auto* p = head->next;
+//    int s=0;
+//    while(p != nullptr)
+//    {
+//        if(s == N-position)
+//        {
+//            p->number = number;
+//            break;
+//        }
+//        s++;
+//        p = p->next;
+//    }
+//}
+void INSERT(T_list* head,int number, int position)
 {
     auto* p = head->next;
-    int s=0;
+    auto* tmp = new T_list;
+    int s=1;
+//    tmp->number = number;
     while(p != nullptr)
     {
-        if(s == N-position)
+        if(s == position)
         {
+            tmp->next=p->next;
+            p->next=tmp;
+            tmp->number=p->number;
             p->number = number;
             break;
         }
@@ -88,16 +108,22 @@ int main() {
 //    PRINT(head);
     Timer t1;
     for(int i=0;i<M;i++)
-        REPLACE(head,-1-rand()%99,rand()%N);
+        INSERT(head,-1-rand()%99,rand()%N);
     std::cout<<t1.elapsed()<<"\n";
 //    PRINT(head);
-    int mass[N];
-    for(int& mas : mass)
-        mas=1+rand()%100;
+    int* mass = new int[N+M];
+    for(int i=0;i<N;i++)
+        mass[i]=1+rand()%100;
+    int tmp;
     Timer t2;
-    for(int i=0;i<M;i++)
-        mass[rand()%N]=-1-rand()%100;
+    for(int i=0;i<M;i++) {
+        tmp=rand() % N;
+        for(int j=N-M+i+1;j>=tmp;j--)
+            mass[j]=mass[j-1];
+        mass[tmp]=-1-rand()%100;
+    }
     std::cout<<t2.elapsed();
+    delete[] mass;
     CLEAR(head);
     delete head;
     return 0;
